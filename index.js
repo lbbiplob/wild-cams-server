@@ -22,14 +22,20 @@ const client = new MongoClient(uri, {
 });
 const run = async () => {
   try {
-    const productsCollection = client
-      .db("Products")
-      .collection("product_details");
+    const photographyCollection = client
+      .db("wildlifeDB")
+      .collection("category");
 
-    app.get("/products", async (req, res) => {
+    app.get("/category", async (req, res) => {
       const quary = {};
-      const cursor = productsCollection.find(quary);
+      const cursor = photographyCollection.find(quary);
       const product = await cursor.toArray();
+      res.send(product);
+    });
+    app.get("/sortcategory", async (req, res) => {
+      const quary = {};
+      const cursor = photographyCollection.find(quary);
+      const product = await cursor.limit(3).toArray();
       res.send(product);
     });
   } finally {
