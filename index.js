@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 
 const port = process.env.PORT || 5000;
@@ -30,6 +30,13 @@ const run = async () => {
       const quary = {};
       const cursor = photographyCollection.find(quary);
       const product = await cursor.toArray();
+      res.send(product);
+    });
+    app.get("/category/:id", async (req, res) => {
+      const id = req.params.id;
+      const quary = { _id: ObjectId(id) };
+      const cursor = photographyCollection.findOne(quary);
+      const product = await cursor;
       res.send(product);
     });
     app.get("/sortcategory", async (req, res) => {
