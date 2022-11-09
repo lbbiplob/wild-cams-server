@@ -25,6 +25,7 @@ const run = async () => {
     const photographyCollection = client
       .db("wildlifeDB")
       .collection("category");
+    const reviewsCollection = client.db("wildlifeDB").collection("reviews");
 
     app.get("/category", async (req, res) => {
       const quary = {};
@@ -44,6 +45,12 @@ const run = async () => {
       const cursor = photographyCollection.find(quary);
       const product = await cursor.limit(3).toArray();
       res.send(product);
+    });
+
+    app.post("/reviews", async (req, res) => {
+      const review = req.body;
+      const result = await reviewsCollection.insertOne(review);
+      res.send(result);
     });
   } finally {
   }
