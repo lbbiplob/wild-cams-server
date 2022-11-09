@@ -53,10 +53,21 @@ const run = async () => {
       res.send(result);
     });
     app.get("/reviews", async (req, res) => {
-      const quary = {};
+      let quary = {};
+      if (req.query.email) {
+        quary = {
+          email: req.query.email,
+        };
+      }
       const cursor = reviewsCollection.find(quary);
       const reviews = await cursor.toArray();
       res.send(reviews);
+    });
+    app.delete("/reviews/:id", async (req, res) => {
+      const id = req.params.id;
+      const quary = { _id: ObjectId(id) };
+      const result = await reviewsCollection.deleteOne(quary);
+      res.send(result);
     });
   } finally {
   }
