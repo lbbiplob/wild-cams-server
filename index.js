@@ -63,6 +63,18 @@ const run = async () => {
       const reviews = await cursor.toArray();
       res.send(reviews);
     });
+    app.patch("/reviews/:id", async (req, res) => {
+      const id = req.params.id;
+      const massage = req.body.massage;
+      const quary = { _id: ObjectId(id) };
+      const updateDoc = {
+        $set: {
+          massage: massage,
+        },
+      };
+      const result = await reviewsCollection.updateOne(quary, updateDoc);
+      res.send(result);
+    });
     app.delete("/reviews/:id", async (req, res) => {
       const id = req.params.id;
       const quary = { _id: ObjectId(id) };
