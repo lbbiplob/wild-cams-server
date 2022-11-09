@@ -52,6 +52,12 @@ const run = async () => {
       const result = await reviewsCollection.insertOne(review);
       res.send(result);
     });
+    app.get("/reviews", async (req, res) => {
+      const quary = {};
+      const cursor = reviewsCollection.find(quary);
+      const reviews = await cursor.toArray();
+      res.send(reviews);
+    });
   } finally {
   }
 };
