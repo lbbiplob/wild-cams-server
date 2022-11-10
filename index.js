@@ -13,8 +13,7 @@ app.use(express.json());
 
 //  fbZbvsHTLa6INW9W
 //  productDB
-console.log(process.env.DB_USER);
-console.log(process.env.DB_PASSWORD);
+
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.b0rbg8o.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
@@ -27,6 +26,7 @@ const run = async () => {
       .db("wildlifeDB")
       .collection("category");
     const reviewsCollection = client.db("wildlifeDB").collection("reviews");
+    const servicesCollection = client.db("wildlifeDB").collection("services");
 
     app.get("/category", async (req, res) => {
       const quary = {};
@@ -47,11 +47,34 @@ const run = async () => {
       const product = await cursor.limit(3).toArray();
       res.send(product);
     });
-
     app.post("/reviews", async (req, res) => {
       const review = req.body;
       const result = await reviewsCollection.insertOne(review);
       res.send(result);
+    });
+    app.post("/services", async (req, res) => {
+      const review = req.body;
+      const result = await servicesCollection.insertOne(review);
+      res.send(result);
+    });
+
+    app.get("/services", async (req, res) => {
+      let quary = {};
+      if (req.query.email) {
+        quary = {
+          email: req.query.email,
+        };
+      }
+      const cursor = servicesCollection.find(quary);
+      const services = await cursor.toArray();
+      res.send(services);
+    });
+    app.get("/services/:id", async (req, res) => {
+      const id = req.params.id;
+      const quary = { _id: ObjectId(id) };
+      const cursor = photographyCollection.findOne(quary);
+      const services = await cursor;
+      res.send(services);
     });
     app.get("/reviews", async (req, res) => {
       let quary = {};
