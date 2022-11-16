@@ -72,7 +72,7 @@ const run = async () => {
     app.get("/services/:id", async (req, res) => {
       const id = req.params.id;
       const quary = { _id: ObjectId(id) };
-      const cursor = photographyCollection.findOne(quary);
+      const cursor = servicesCollection.findOne(quary);
       const services = await cursor;
       res.send(services);
     });
@@ -83,17 +83,19 @@ const run = async () => {
           email: req.query.email,
         };
       }
-      const cursor = reviewsCollection.find(quary);
+      const sort = { length: -1 };
+      const cursor = reviewsCollection.find(quary).sort({ _id: -1 });
       const reviews = await cursor.toArray();
       res.send(reviews);
     });
     app.patch("/reviews/:id", async (req, res) => {
       const id = req.params.id;
       const massage = req.body.massage;
+      console.log(id);
       const quary = { _id: ObjectId(id) };
       const updateDoc = {
         $set: {
-          massage: massage,
+          massage,
         },
       };
       const result = await reviewsCollection.updateOne(quary, updateDoc);
